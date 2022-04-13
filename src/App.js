@@ -1,8 +1,8 @@
 const App = () => {
   return (
-    <div className="App">
+    <main>
       <h1>RegEx</h1>
-    </div>
+    </main>
   );
 }
 
