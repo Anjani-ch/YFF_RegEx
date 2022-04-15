@@ -5,17 +5,55 @@ import { Form } from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
 
 const Challenge = ({ challenge }) => {
-  const [listBackground, setlistBackground] = useState(null);
-  const [listColor, setListColor] = useState(null);
+  const [hasError, setHasError] = useState(false);
   const [testCases, setTestCases] = useState(challenge.testCases);
-  const [regex, setRegex] = useState(null);
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    const input = e.target['regex-input'].value;
+    try {
+      const input = e.target['regex-input'].value.split('/');
+      const regexInput = input[1];
+      const flags = input[2].split('');
 
-    console.log(input);
+      if(!regexInput) throw new Error('Regex cannot be empty');
+
+      const regex = new RegExp(regexInput, flags);
+
+      setTestCases(
+        testCases.map(testCase => {
+          let updatedStatus;
+
+          if(regex.test(testCase.value)) {
+            updatedStatus = 'pass';
+          } else {
+            updatedStatus = 'fail';
+          }
+
+          return {
+            value: testCase.value,
+            status: updatedStatus
+          };
+        })
+      );
+    } catch (err) {
+      setHasError(true);
+    }
+  };
+
+  const reset = e => {
+    if(e.key === 'Backspace') {
+      setHasError(false);
+
+      setTestCases(
+        testCases.map(testCase => {
+          return {
+            value: testCase.value,
+            sttaus: null
+          }
+        })
+      );
+    }
   };
 
   return (
@@ -25,7 +63,7 @@ const Challenge = ({ challenge }) => {
 
       <ListGroup>
         {testCases.map((testCase, index) => {
-          return <ListGroup.Item key={index} className={`${listBackground} ${listColor}`}>{testCase.value}</ListGroup.Item>
+          return <ListGroup.Item key={index} className={testCase.status === 'pass' ? 'bg-success text-light' : testCase.status === 'fail' ? 'bg-danger text-light' : ''}>{testCase.value}</ListGroup.Item>
         })}
       </ListGroup>
 
@@ -33,7 +71,8 @@ const Challenge = ({ challenge }) => {
         <Form onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Label>Enter your expression here:</Form.Label>
-            <Form.Control type='text' name='regex-input' placeholder='Regular Expression' />
+            <Form.Control onKeyUp={reset} type='text' name='regex-input' placeholder='Regular Expression' />
+            <Form.Label className={`text-danger ${hasError ? 'd-block' : 'd-none'}`}>Invalid Input</Form.Label>
           </Form.Group>
           <Button variant='primary' type='submit' className='mt-2 mb-3'>Submit</Button>
         </Form>

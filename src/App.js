@@ -11,15 +11,15 @@ const App = _ => {
       testCases: [
         {
           value: 'example@example.com',
-          status: 'awaiting-submit'
+          status: null
         },
         {
           value: 'example-example123@example.co.uk',
-          status: 'awaiting-submit'
+          status: null
         },
         {
           value: 'example_example12@example.com',
-          status: 'awaiting-status'
+          status: null
         }
       ],
     },
