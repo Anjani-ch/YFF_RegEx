@@ -11,8 +11,10 @@ const Challenge = ({ challenge }) => {
   const handleSubmit = e => {
     e.preventDefault();
 
+    const inputElement = e.target['regex-input'];
+
     try {
-      const input = e.target['regex-input'].value.split('/');
+      const input = inputElement.value.split('/');
       const regexInput = input[1];
       const flags = input[2].split('');
 
@@ -22,9 +24,10 @@ const Challenge = ({ challenge }) => {
 
       setTestCases(
         testCases.map(testCase => {
+          const match = testCase.value.match(regex);
           let updatedStatus;
-
-          if(regex.test(testCase.value)) {
+        
+          if(((match && match[0] === match.input)) === testCase.expectedResult) {
             updatedStatus = 'pass';
           } else {
             updatedStatus = 'fail';
@@ -32,27 +35,30 @@ const Challenge = ({ challenge }) => {
 
           return {
             value: testCase.value,
-            status: updatedStatus
+            status: updatedStatus,
+            expectedResult: testCase.expectedResult
           };
         })
       );
     } catch (err) {
       setHasError(true);
-    }
-  };
-
-  const reset = e => {
-    if(e.key === 'Backspace') {
-      setHasError(false);
 
       setTestCases(
         testCases.map(testCase => {
           return {
             value: testCase.value,
-            sttaus: null
-          }
+            status: null
+          };
         })
       );
+
+      inputElement.value = '';
+    }
+  };
+
+  const reset = e => {
+    if(hasError && e.target.value) {
+      setHasError(false);
     }
   };
 
