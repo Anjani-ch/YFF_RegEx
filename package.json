@@ -2,6 +2,7 @@
   "name": "regex_yff",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://anjani-ch.github.io/YFF_RegEx/",
   "dependencies": {
     "bootstrap": "^5.1.3",
     "react": "^18.0.0",
@@ -11,7 +12,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
