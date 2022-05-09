@@ -26,9 +26,13 @@ const Challenge = ({ challenge }) => {
         testCases.map(testCase => {
           const match = testCase.value.match(regex);
           let updatedStatus;
-        
-          if(((match && match[0] === match.input)) === testCase.expectedResult) {
-            updatedStatus = 'pass';
+
+          if(match) {
+            if(((match[0] === match.input)) === testCase.expectedResult) {
+              updatedStatus = 'pass';
+            } else {
+              updatedStatus = 'fail';
+            }
           } else {
             updatedStatus = 'fail';
           }
